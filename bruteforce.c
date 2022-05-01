@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){ //char **argv
   if(id==0){
     MPI_Wait(&req, &st);
     decrypt(found, (char *)cipher, ciphlen);
-    printf("")
+    printf("\n");
     printf("%li %s\n", found, cipher);
   }
 
