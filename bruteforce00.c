@@ -30,17 +30,29 @@ void encrypt(long key, char *ciph, int len){
   ecb_crypt((char *)&k, (char *) ciph, 16, DES_ENCRYPT);
 }
 
-char search[] = " the ";
-int tryKey(long key, char *ciph, int len){
+// char search[] = " the ";
+int tryKey(long key, char *ciph, int len, char* needle){
   char temp[len+1];
   memcpy(temp, ciph, len);
   temp[len]=0;
   decrypt(key, temp, len);
-  return strstr((char *)temp, search) != NULL;
+  return strstr((char *)temp, needle) != NULL;
 }
 
-unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
+// unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
+
+
+
 int main(int argc, char *argv[]){ //char **argv
+
+  char *needle = "holaque";
+
+  FILE *fp;
+   char cipher[255];
+   fp = fopen("test.txt", "r");
+  fgets(cipher, 255, (FILE*)fp);
+
+
   int N, id;
   long upper = (1L <<56); //upper bound DES keys 2^56
   long mylower, myupper;
@@ -72,7 +84,7 @@ int main(int argc, char *argv[]){ //char **argv
     if(ready)
       break;  //ya encontraron, salir
 
-    if(tryKey(i, (char *)cipher, ciphlen)){
+    if(tryKey(i, (char *)cipher, ciphlen, needle)){
       found = i;
       for(int node=0; node<N; node++){
         MPI_Send(&found, 1, MPI_LONG, node, 0, MPI_COMM_WORLD);
