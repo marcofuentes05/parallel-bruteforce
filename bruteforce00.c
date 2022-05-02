@@ -16,7 +16,7 @@ void decrypt(long key, char *ciph, int len){
     k += (key & (0xFE << i*8));
   }
   des_setparity((char *)&k);  //el poder del casteo y &
-  ecb_crypt((char *)&k, (char *) ciph, 16, DES_DECRYPT);
+  ecb_crypt((char *)&k, (char *) ciph, 256, DES_DECRYPT);
 }
 
 void encrypt(long key, char *ciph, int len){
@@ -27,7 +27,7 @@ void encrypt(long key, char *ciph, int len){
     k += (key & (0xFE << i*8));
   }
   des_setparity((char *)&k);  //el poder del casteo y &
-  ecb_crypt((char *)&k, (char *) ciph, 16, DES_ENCRYPT);
+  ecb_crypt((char *)&k, (char *) ciph, 256, DES_ENCRYPT);
 }
 
 // char search[] = " the ";
@@ -45,11 +45,11 @@ int tryKey(long key, char *ciph, int len, char* needle){
 
 int main(int argc, char *argv[]){ //char **argv
 
-  char *needle = "holaque";
+  char *needle = "Lorem";
 
   FILE *fp;
    char cipher[255];
-   fp = fopen("test.txt", "r");
+   fp = fopen("files/lorem.txt", "r");
   fgets(cipher, 255, (FILE*)fp);
 
 
@@ -61,6 +61,8 @@ int main(int argc, char *argv[]){ //char **argv
   int flag;
   int ciphlen = strlen(cipher);
   MPI_Comm comm = MPI_COMM_WORLD;
+
+  double start = MPI_Wtime();
 
   MPI_Init(NULL, NULL);
   MPI_Comm_size(comm, &N);
@@ -100,4 +102,8 @@ int main(int argc, char *argv[]){ //char **argv
   }
 
   MPI_Finalize();
+
+  double end = MPI_Wtime();
+
+  printf("The process took %f seconds!\n", end - start);
 }
