@@ -12,7 +12,7 @@ void decrypt(long key, char *ciph, int len){
     k += (key & (0xFE << i*8));
   }
   des_setparity((char *)&k);  //el poder del casteo y &
-  ecb_crypt((char *)&k, (char *) ciph, 16, DES_DECRYPT);
+  ecb_crypt((char *)&k, (char *) ciph, len + 9, DES_DECRYPT); // ESTO SOLO PARA QUE EL TOTAL FUERA 256 
 }
 
 void encrypt(long key, char *ciph, int len){
@@ -23,7 +23,7 @@ void encrypt(long key, char *ciph, int len){
     k += (key & (0xFE << i*8));
   }
   des_setparity((char *)&k);  //el poder del casteo y &
-  ecb_crypt((char *)&k, (char *) ciph, 16, DES_ENCRYPT);
+  ecb_crypt((char *)&k, (char *) ciph, len + 9, DES_ENCRYPT); // ESTO SOLO PARA QUE EL TOTAL FUERA 256 
 }
 
 // char search[] = "testt";
