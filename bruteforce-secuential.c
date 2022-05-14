@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include "des_crypt.h"
 
 void decrypt(long key, char *ciph, int len){
@@ -40,7 +41,9 @@ unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170
 
 int main(int argc, char *argv[]){
   printf("STARTED EXECUTION!\n");
-  char *needle = "Lorem ";
+  char *needle = " the ";
+  clock_t t;
+  t = clock();
 
   printf("cipher: %s\n", cipher);
 
@@ -75,4 +78,9 @@ int main(int argc, char *argv[]){
   decrypt(found, (char *)cipher, ciphlen);
 
   printf("Plain is: %s\n", cipher);
+
+   t = clock() - t;
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+  
+    printf("Process took %f seconds to execute \n", time_taken);
 }

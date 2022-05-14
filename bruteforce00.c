@@ -40,22 +40,16 @@ int tryKey(long key, char *ciph, int len, char* needle){
   return strstr((char *)temp, needle) != NULL;
 }
 
-// unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
+unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
 
 
 
 int main(int argc, char *argv[]){ //char **argv
   printf("STARTED EXECUTION!\n");
-  char *needle = "Lorem";
-
-  // FILE *fp;
-  //  char cipher[255];
-  //  fp = fopen("files/lorem.txt", "r");
-  // fgets(cipher, 255, (FILE*)fp);
-char *cipher = "��nǼzk�������<�\"C�pW+�";
+  char *needle = " the ";
 
   int N, id;
-  long upper = 64;//  (1 <<8); //upper bound DES keys 2^56
+  long upper = (1 <<32); //upper bound DES keys 2^56
   long mylower, myupper;
   MPI_Status st;
   MPI_Request req;
