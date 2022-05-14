@@ -45,6 +45,8 @@ int main(int argc, char * argv[]) {
    fp = fopen("files/lorem.txt", "r");
   fgets(plain, 255, (FILE*)fp);
 
+  // unsigned char* plain = "Lorem ipsum";
+
   printf("FILE CONTENT IS: %s\n", plain);
 
   int len = strlen(plain); 
@@ -69,5 +71,14 @@ int main(int argc, char * argv[]) {
 
   if (tryKey(key, temp, len, needle)) {
     printf("CIPHER WORKS!\n");
+    char newTemp[len+1];
+    memcpy(newTemp, temp, len);
+    newTemp[len]=0;
+    decrypt(key, newTemp, len);
+    printf("%s\n", newTemp);
+    for (int i = 0; i < 10; i++) {
+      printf("%d ", (int )temp[i]);
+    }
+    printf("\n");
   }
 }

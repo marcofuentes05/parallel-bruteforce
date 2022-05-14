@@ -40,63 +40,67 @@ int tryKey(long key, char *ciph, int len, char* needle){
   return strstr((char *)temp, needle) != NULL;
 }
 
-unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
+// unsigned char cipher[] = {108, 245, 65, 63, 125, 200, 150, 66, 17, 170, 207, 170, 34, 31, 70, 215, 0};
+
+
+
 int main(int argc, char *argv[]){ //char **argv
+  printf("The process just started!\n");
 
   char *needle = "Lorem";
 
-  FILE *fp;
-   char cipher[255];
-   fp = fopen("files/lorem.txt", "r");
-  fgets(cipher, 255, (FILE*)fp);
+  // FILE *fp;
+   char *cipher = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum!";
+  //  fp = fopen("lorem.txt", "r");
+  // fgets(cipher, 255, (FILE*)fp);
 
 
   int N, id;
-  long upper = (1L <<56); //upper bound DES keys 2^56
+  long upper = 64;// (1L <<8); //upper bound DES keys 2^56
   long mylower, myupper;
   MPI_Status st;
   MPI_Request req;
-  int flag;
+  // int flag;
   int ciphlen = strlen(cipher);
   MPI_Comm comm = MPI_COMM_WORLD;
 
   double start = MPI_Wtime();
 
-  MPI_Init(NULL, NULL);
-  MPI_Comm_size(comm, &N);
-  MPI_Comm_rank(comm, &id);
+  // MPI_Init(NULL, NULL);
+  // MPI_Comm_size(comm, &N);
+  // MPI_Comm_rank(comm, &id);
 
-  int range_per_node = upper / N;
-  mylower = range_per_node * id;
-  myupper = range_per_node * (id+1) -1;
-  if(id == N-1){
-    //compensar residuo
-    myupper = upper;
-  }
+  // int range_per_node = upper / N;
+  // mylower = range_per_node * id;
+  // myupper = range_per_node * (id+1) -1;
+  // if(id == N-1){
+  //   //compensar residuo
+  //   myupper = upper;
+  // }
 
-  long found = 0;
+  // long found = 0;
 
-  //non blocking receive, revisar en el for si no es 0
-  MPI_Irecv(&found, 1, MPI_LONG, MPI_ANY_SOURCE, MPI_ANY_TAG, comm, &req);
+  // //non blocking receive, revisar en el for si no es 0
+  // MPI_Irecv(&found, 1, MPI_LONG, MPI_ANY_SOURCE, MPI_ANY_TAG, comm, &req);
 
-  for(int i = mylower; i<myupper && (found==0); ++i){
-    if(tryKey(i, (char *)cipher, ciphlen, needle)){
-      found = i;
-      for(int node=0; node<N; node++){
-        MPI_Send(&found, 1, MPI_LONG, node, 0, MPI_COMM_WORLD);
-      }
-      break;
-    }
-  }
+  // for(int i = mylower; i<myupper && (found==0); ++i){
+  //   if(tryKey(i, (char *)cipher, ciphlen, needle)){
+  //     found = i;
+  //     for(int node=0; node<N; node++){
+  //       MPI_Send(&found, 1, MPI_LONG, node, 0, MPI_COMM_WORLD);
+  //     }
+  //     break;
+  //   }
+  // }
 
-  if(id==0){
-    MPI_Wait(&req, &st);
-    decrypt(found, (char *)cipher, ciphlen);
-    printf("\n");
-    printf("%li %s\n", found, cipher);
-  }
+  // if(id==0){
+  //   MPI_Wait(&req, &st);
+  //   decrypt(found, (char *)cipher, ciphlen);
+  //   printf("\n");
+  //   printf("%li %s\n", found, cipher);
+  // }
 
-  MPI_Finalize();
+  // MPI_Finalize();
 
   double end = MPI_Wtime();
 

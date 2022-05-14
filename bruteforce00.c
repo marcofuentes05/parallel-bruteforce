@@ -1,12 +1,13 @@
 //bruteforce.c
 //nota: el key usado es bastante pequenio, cuando sea random speedup variara
 
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
 #include <unistd.h>
-#include <rpc/des_crypt.h>
+#include "des_crypt.h"
 
 void decrypt(long key, char *ciph, int len){
   //set parity of key and do decrypt
@@ -44,17 +45,17 @@ int tryKey(long key, char *ciph, int len, char* needle){
 
 
 int main(int argc, char *argv[]){ //char **argv
-
+  printf("STARTED EXECUTION!\n");
   char *needle = "Lorem";
 
-  FILE *fp;
-   char cipher[255];
-   fp = fopen("files/lorem.txt", "r");
-  fgets(cipher, 255, (FILE*)fp);
-
+  // FILE *fp;
+  //  char cipher[255];
+  //  fp = fopen("files/lorem.txt", "r");
+  // fgets(cipher, 255, (FILE*)fp);
+char *cipher = "��nǼzk�������<�\"C�pW+�";
 
   int N, id;
-  long upper = (1L <<56); //upper bound DES keys 2^56
+  long upper = 64;//  (1 <<8); //upper bound DES keys 2^56
   long mylower, myupper;
   MPI_Status st;
   MPI_Request req;
@@ -62,11 +63,14 @@ int main(int argc, char *argv[]){ //char **argv
   int ciphlen = strlen(cipher);
   MPI_Comm comm = MPI_COMM_WORLD;
 
-  double start = MPI_Wtime();
 
   MPI_Init(NULL, NULL);
+  double start = MPI_Wtime();
   MPI_Comm_size(comm, &N);
   MPI_Comm_rank(comm, &id);
+
+  printf("%d\n", N);
+  printf("%d\n", id);
 
   long range_per_node = upper / N;
   mylower = range_per_node * id;
@@ -101,9 +105,8 @@ int main(int argc, char *argv[]){ //char **argv
     printf("%li %s\n", found, cipher);
   }
 
-  MPI_Finalize();
-
   double end = MPI_Wtime();
+  MPI_Finalize();
 
   printf("The process took %f seconds!\n", end - start);
 }
